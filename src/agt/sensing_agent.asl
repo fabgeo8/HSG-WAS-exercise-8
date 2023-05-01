@@ -2,6 +2,14 @@
 
 
 /* Initial beliefs and rules */
+role_goal(R, G) :-
+	role_mission(R, _, M) & mission_goal(M, G).
+
+can_achieve (G) :-
+	.relevant_plans({+!G[scheme(_)]}, LP) & LP \== [].
+
+i_have_plans_for(R) :-
+	not (role_goal(R, G) & not can_achieve(G)).
 
 /* Initial goals */
 !start. // the agent has the goal to start
@@ -15,6 +23,22 @@
 @start_plan
 +!start : true <-
 	.print("Hello world").
+
+
++organizationDeployed(OrgName, GroupName, SchemeName) : true <-
+	.print("Joining Organization: ", OrgName);
+	lookupArtifact(OrgName, OrgArtId);
+	focus(OrgArtId);
+	lookupArtifact(GroupName, GrpArtId);
+	focus(GrpArtId);
+	!reason_for_roles.
+
+
+@reason_for_roles_plan
++!reason_for_roles : role(R, G) & i_have_plans_for(R) <- 
+	.print("Adopting a new role: ", R);
+	adoptRole(R).
+
 
 /* 
  * Plan for reacting to the addition of the goal !read_temperature

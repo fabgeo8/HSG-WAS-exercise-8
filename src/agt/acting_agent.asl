@@ -17,6 +17,21 @@ robot_td("https://raw.githubusercontent.com/Interactions-HSG/example-tds/main/td
 +!start : true <-
 	.print("Hello world").
 
+
++organizationDeployed(OrgName, GroupName, SchemeName) : true <-
+	.print("Joining Organization: ", OrgName);
+	lookupArtifact(OrgName, OrgArtId);
+	focus(OrgArtId);
+	lookupArtifact(GroupName, GrpArtId);
+	focus(GrpArtId);
+	!reason_for_roles.
+
+
++!reason_for_roles : role(R, _) & i_have_plans_for(R)
+<-
+	.print("Adopting role: ", R);
+	adoptRole(R).
+
 /* 
  * Plan for reacting to the addition of the goal !manifest_temperature
  * Triggering event: addition of goal !manifest_temperature
@@ -37,7 +52,7 @@ robot_td("https://raw.githubusercontent.com/Interactions-HSG/example-tds/main/td
 	 * follow the instructions here: https://github.com/HSG-WAS-SS23/exercise-8/blob/main/README.md#test-with-the-real-phantomx-reactor-robot-arm
 	 */
 	// creates a ThingArtifact based on the TD of the robotic arm
-	makeArtifact("leubot1", "org.hyperagents.jacamo.artifacts.wot.ThingArtifact", [Location, true], Leubot1Id); 
+	makeArtifact("leubot1", "wot.ThingArtifact", [Location, true], Leubot1Id); 
 	
 	// sets the API key for controlling the robotic arm as an authenticated user
 	//setAPIKey("77d7a2250abbdb59c6f6324bf1dcddb5")[artifact_id(leubot1)];
